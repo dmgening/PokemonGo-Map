@@ -1,21 +1,34 @@
-<title>Nearby Pokémon</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{font-family:sans-serif}
-h2{margin-top:15px;}
-.card {display:block;border:solid 1px #aaa;border-radius:2px;box-shadow:2px 2px 2px #eee;font-family:sans-serif;margin-bottom:8px;text-decoration:none;color:#444}
-.card>div{margin: 15px 0}
-img{float:left}
-h3{margin:0}
-span{color:#777}
-.origin{position:relative;top:20px;padding-bottom:10px}
-</style>
+<html>
+<head>
+	<title>Nearby Pokémon</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>var page_loaded = new Date().getTime();</script>
+	<link rel="stylesheet" href="static/dist/css/mobile.min.css" type="text/css" />
+</head>
+<body>
+	<h1>Nearby Pokémon <small id="msg"></small></h1>
 
-<h2><a href="javascript:location.href=location.href">Nearby Pokémon &#x21bb;</a></h2>
-{% for pokemon in pokemon_list %}
-<a class="card" href='geo:0,0?q={{pokemon.latitude}},{{pokemon.longitude}}({{pokemon.name}})'>
-<img height='60' width='80' src='static/pixel_icons/{{pokemon.id}}.png'>
-<div><h3>{{pokemon.distance}}m ({{pokemon.card_dir}})</h3><span>{{pokemon.time_to_disappear}}</span></div>
-</a>
+	<ol>
+{% for pokemon in pokemon_list[:20] %}
+		<li style="background-image: url('static/pixel_icons/{{pokemon.id}}.png')"
+			href='geo:0,0?q={{pokemon.latitude}},{{pokemon.longitude}}({{pokemon.name}})'>
+			<div class="name">{{pokemon.name}}</div>
+			<div class="dir"> - {{pokemon.distance}}m ({{pokemon.card_dir}}) - </div>
+			<div class="remain" disappear="{{pokemon.disappear_sec}}">{{pokemon.time_to_disappear}}</div>
+		</li>
 {% endfor %}
-<a class="origin" href='geo:0,0?q={{origin_lat}},{{origin_lng}}(origin)'>scan location</a>
+	</ol>
+
+	<div id="nav">
+		<button>Refresh</button>
+		<div>
+			<label><input type="checkbox" id="use-loc">Device location</label>
+			<label><input type="checkbox" id="use-timer">Live countdown</label>
+		</div>
+	</div>
+
+	<a class="origin" href='geo:0,0?q={{origin_lat}},{{origin_lng}}(origin)'>origin location</a>
+
+	<script src="static/dist/js/mobile.min.js"></script>
+</body>
+</html>
